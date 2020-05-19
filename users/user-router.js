@@ -10,6 +10,7 @@ const {isValidSignup, isValidLogin} = require('../middleware/user-mw')
 const restricted = require('../middleware/restricted-mw')
 const generateToken = require('./generateToken')
 
+//bringing in /api/users
 router.post('/register', (req, res) => {
     const creds = req.body
 
