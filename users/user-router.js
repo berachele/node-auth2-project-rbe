@@ -72,8 +72,23 @@ router.post('/login', (req, res) => {
     }
 })
 
-router.get('/users', (req, res) => {
-
+router.get('/', restricted, (req, res) => {
+    if(user = 1){ //CHANGE
+        Users.find()
+        .then(users => {
+            res.status(200).json({users, jwt: req.jwt})
+        })
+        .catch(err => {
+            console.log({err})
+            res.status(500).json({
+                message: "There was an error getting users information"
+            })
+        })
+    }else {
+        res.status(401).json({
+            message: "Please log in to access users"
+        })
+    }
 })
 
 module.exports = router
