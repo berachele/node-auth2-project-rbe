@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const configVars = require('../config/vars')
 
-module.exports = function restricted(req, res, next) {
+module.exports = async function restricted(req, res, next) {
     const token = req.headers.authorization
 
     if(token){
@@ -15,7 +15,7 @@ module.exports = function restricted(req, res, next) {
                 })
             }else {
                 //token is good
-                req.jwt = decodedPayload //any other middleware that comes after middleware can read the token
+                req.jwt = decodedPayload //any other middleware that comes after sucessful login/middleware can read the token
 
                 next()
             }

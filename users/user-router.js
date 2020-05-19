@@ -6,14 +6,14 @@ const router = express.Router()
 
 const Users = require('./user-model')
 
-const {isValid} = require('../middleware/user-mw')
+const {isValidSignup, isValidLogin} = require('../middleware/user-mw')
 const restricted = require('../middleware/restricted-mw')
 const generateToken = require('./generateToken')
 
 router.post('/register', (req, res) => {
     const creds = req.body
 
-    if(isValid(creds)){
+    if(isValidSignup(creds)){
         const ROUNDS = process.env.BCRYPT_ROUNDS || 8
         const hash = bcrypt.hashSync(creds.password, ROUNDS)
 
@@ -41,7 +41,7 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     const {username, password} = req.body
 
-    if(isValid(req.body)) {
+    if(isValidLogin(req.body)) {
         Users.findBy({username: username})
         .then(([user]) => {
             //compare hash
@@ -73,22 +73,17 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/', restricted, (req, res) => {
-    if(user = 1){ //CHANGE
-        Users.find()
-        .then(users => {
-            res.status(200).json({users, jwt: req.jwt})
+    Users.find()
+    .then(users => {
+        res.status(200).json({users, jwt: req.jwt}) //where we can list jwt if logged in
+    })
+    .catch(err => {
+        console.log({err})
+        res.status(500).json({
+            message: "There was an error getting users information"
         })
-        .catch(err => {
-            console.log({err})
-            res.status(500).json({
-                message: "There was an error getting users information"
-            })
-        })
-    }else {
-        res.status(401).json({
-            message: "Please log in to access users"
-        })
-    }
+    })
 })
+
 
 module.exports = router

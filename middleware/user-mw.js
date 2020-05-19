@@ -1,7 +1,12 @@
 module.exports = {
-    isValid,
+    isValidSignup,
+    isValidLogin,
 }
 
-function isValid(user) {
-    return Boolean(user.username && user.password && user.department && typeof user.password === "string")
+function isValidSignup(user) {
+    return Boolean(user.username && user.password && user.department)
+}
+
+function isValidLogin(user) {
+    return Boolean(user.username && user.password && typeof user.password === "string")
 }
